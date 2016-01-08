@@ -59,18 +59,19 @@ static struct msm_bus_scale_pdata bus_client_pdata = {
 	.name = "acpuclock",
 };
 
+// Frequency table 1, max freq 1.1GHz
 static struct clkctl_acpu_speed acpu_freq_tbl_8226_1p1[] = {
+#ifdef CONFIG_CPU_UNDERCLOCK
 	// "Underclock" frequencies (96 to 249 MHz): use 1V
 	{ 1,   96000, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
 	{ 1,  192000, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
 	{ 1,  249600, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
-	
+#endif
 	// Standard frequencies part 1 (300 to 787 MHz): use 1.05V for the first two and 1.1V for the last two
 	{ 1,  300000, PLL0,    4, 2,   1050000,   1050000, 4 },
 	{ 1,  384000, ACPUPLL, 5, 2,   1050000,   1050000, 4 },
 	{ 1,  600000, PLL0,    4, 0,   1100000,   1100000, 6 },
-	{ 1,  787200, ACPUPLL, 5, 0,   1100000,   1100000, 6 },
-	
+	{ 1,  787200, ACPUPLL, 5, 0,   1100000,   1100000, 6 },	
 	// Standard frequencies part 2 (998 MHz to 1.2 GHz): use 1.15V
 	{ 1,  998400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
 	{ 1, 1094400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
@@ -78,18 +79,19 @@ static struct clkctl_acpu_speed acpu_freq_tbl_8226_1p1[] = {
 	{ 0 }
 };
 
+// Frequency table 2, max freq 1.2GHz
 static struct clkctl_acpu_speed acpu_freq_tbl_8226_1p2[] = {
+#ifdef CONFIG_CPU_UNDERCLOCK
 	// "Underclock" frequencies (96 to 249 MHz): use 1V
 	{ 1,   96000, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
 	{ 1,  192000, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
 	{ 1,  249600, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
-	
+#endif	
 	// Standard frequencies part 1 (300 to 787 MHz): use 1.05V for the first two and 1.1V for the last two
 	{ 1,  300000, PLL0,    4, 2,   1050000,   1050000, 4 },
 	{ 1,  384000, ACPUPLL, 5, 2,   1050000,   1050000, 4 },
 	{ 1,  600000, PLL0,    4, 0,   1100000,   1100000, 6 },
-	{ 1,  787200, ACPUPLL, 5, 0,   1100000,   1100000, 6 },
-	
+	{ 1,  787200, ACPUPLL, 5, 0,   1100000,   1100000, 6 },	
 	// Standard frequencies part 2 (998 MHz to 1.2 GHz): use 1.15V
 	{ 1,  998400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
 	{ 1, 1094400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
@@ -97,51 +99,48 @@ static struct clkctl_acpu_speed acpu_freq_tbl_8226_1p2[] = {
 	{ 0 }
 };
 
+// Frequency table 3, max freq 1.4GHz
 static struct clkctl_acpu_speed acpu_freq_tbl_8226_1p4[] = {
-	
-	// "Underclock" frequencies (96 to 249 MHz): use 1V
+#ifdef CONFIG_CPU_UNDERCLOCK
+	// "Underclock" frequencies (96 to 249 MHz): Use 1V
 	{ 1,   96000, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
 	{ 1,  192000, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
 	{ 1,  249600, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
-	
-	// Standard frequencies part 1 (300 to 787 MHz): use 1.05V for the first two and 1.1V for the last two
+#endif	
+	// Standard frequencies part 1 (300 to 787 MHz): Use 1.05V for the first two and 1.1V for the last two
 	{ 1,  300000, PLL0,    4, 2,   1050000,   1050000, 4 },
 	{ 1,  384000, ACPUPLL, 5, 2,   1050000,   1050000, 4 },
 	{ 1,  600000, PLL0,    4, 0,   1100000,   1100000, 6 },
-	{ 1,  787200, ACPUPLL, 5, 0,   1100000,   1100000, 6 },
-	
-	// Standard frequencies part 2 (998 MHz to 1.2 GHz): use 1.15V
+	{ 1,  787200, ACPUPLL, 5, 0,   1100000,   1100000, 6 },	
+	// Standard frequencies part 2 (998 MHz to 1.2 GHz): Use 1.15V
 	{ 1,  998400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
 	{ 1, 1094400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
-	{ 1, 1190400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
-	
-	// "Overclock" frequencies, partial range (1.3 to 1.4 GHz): Use 1.175V.
-	// These frequencies are not used on Motorola MSM8x26 devices.
+	{ 1, 1190400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },	
+	// Standard frequencies part 3 (1.3 to 1.4 GHz): Use 1.175V
 	{ 1, 1305600, ACPUPLL, 5, 0,   1175000,   1175000, 7 },
 	{ 1, 1344000, ACPUPLL, 5, 0,   1175000,   1175000, 7 },
 	{ 1, 1401600, ACPUPLL, 5, 0,   1175000,   1175000, 7 },
 	{ 0 }
 };
 
+// Frequency table 4, max freq 1.6GHz
 static struct clkctl_acpu_speed acpu_freq_tbl_8226_1p6[] = {
-	// "Underclock" frequencies (96 to 249 MHz): use 1V
+#ifdef CONFIG_CPU_UNDERCLOCK
+	// "Underclock" frequencies (96 to 249 MHz): Use 1V
 	{ 1,   96000, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
 	{ 1,  192000, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
 	{ 1,  249600, ACPUPLL, 5, 2,   1000000,   1000000, 4 },
-	
-	// Standard frequencies part 1 (300 to 787 MHz): use 1.05V for the first two and 1.1V for the last two
+#endif	
+	// Standard frequencies part 1 (300 to 787 MHz): Use 1.05V for the first two and 1.1V for the last two
 	{ 1,  300000, PLL0,    4, 2,   1050000,   1050000, 4 },
 	{ 1,  384000, ACPUPLL, 5, 2,   1050000,   1050000, 4 },
 	{ 1,  600000, PLL0,    4, 0,   1100000,   1100000, 6 },
-	{ 1,  787200, ACPUPLL, 5, 0,   1100000,   1100000, 6 },
-	
-	// Standard frequencies part 2 (998 MHz to 1.2 GHz): use 1.15V
+	{ 1,  787200, ACPUPLL, 5, 0,   1100000,   1100000, 6 },	
+	// Standard frequencies part 2 (998 MHz to 1.2 GHz): Use 1.15V
 	{ 1,  998400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
 	{ 1, 1094400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
-	{ 1, 1190400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },
-	
-	// "Overclock" frequencies, full range (1.3 to 1.6 GHz): Use 1.175V for the first three and 1.2V for the last two.
-	// These frequencies are not used on Motorola MSM8x26 devices.
+	{ 1, 1190400, ACPUPLL, 5, 0,   1150000,   1150000, 7 },	
+	// Standard frequencies part 3 (1.3 to 1.6 GHz): Use 1.175V for the first three and 1.2V for the last two.
 	{ 1, 1305600, ACPUPLL, 5, 0,   1175000,   1175000, 7 },
 	{ 1, 1344000, ACPUPLL, 5, 0,   1175000,   1175000, 7 },
 	{ 1, 1401600, ACPUPLL, 5, 0,   1175000,   1175000, 7 },
