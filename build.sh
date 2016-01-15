@@ -28,6 +28,9 @@ if [ $device = "falcon" ]; then
 elif [ $device = "peregrine" ]; then
 	echo -e "Device: Moto G 4G (peregrine)";
 	device2="Peregrine";
+elif [ $device = "titan" ]; then
+	echo -e "Device: Moto G 2nd Gen (titan)";
+	device2="Titan";
 else
 	echo -e "Invalid device. Aborting.";
 	exit 1;
