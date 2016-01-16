@@ -5,10 +5,10 @@ device="$1";
 this="KaminariCM";
 
 # Set up the cross-compiler
-export PATH=$HOME/Toolchains/Linaro-5.2-A7/bin:$PATH;
+export PATH=$HOME/Toolchains/Uber-5.3/bin:$PATH;
 export ARCH=arm;
 export SUBARCH=arm;
-export CROSS_COMPILE=arm-cortex_a7-linux-gnueabihf-;
+export CROSS_COMPILE=arm-eabi-;
 
 # Clone the custom anykernel repo
 if [ ! -d ../Custom_AnyKernel ]; then
