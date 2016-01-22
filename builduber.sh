@@ -25,15 +25,19 @@ echo -e "Building KaminariKernel (CyanogenMod/AOSP version)...";
 if [ $device = "falcon" ]; then
 	echo -e "Device: Moto G (falcon)";
 	device2="Falcon";
+	defconfig="falcon_defconfig";
 elif [ $device = "peregrine" ]; then
 	echo -e "Device: Moto G 4G (peregrine)";
 	device2="Peregrine";
+	defconfig="peregrine_defconfig";
 elif [ $device = "titan" ]; then
 	echo -e "Device: Moto G 2nd Gen (titan)";
 	device2="Titan";
+	defconfig="titan_defconfig";
 elif [ $device = "thea" ]; then
 	echo -e "Device: Moto G 2nd Gen with LTE (thea)";
 	device2="Thea";
+	defconfig="titan_defconfig";
 else
 	echo -e "Invalid device. Aborting.";
 	exit 1;
@@ -101,7 +105,7 @@ else
 fi;
 
 # Build the kernel
-make kaminari/"$device"_defconfig;
+make kaminari/$defconfig;
 
 if [ "$2" = "clean" -o "$2" = "clean_full" ]; then
 	if [ $3 ]; then	
