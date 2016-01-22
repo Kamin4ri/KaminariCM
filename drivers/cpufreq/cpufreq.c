@@ -446,16 +446,8 @@ static ssize_t show_##file_name				\
 show_one(cpuinfo_min_freq, cpuinfo.min_freq);
 show_one(cpuinfo_max_freq, cpuinfo.max_freq);
 show_one(cpuinfo_transition_latency, cpuinfo.transition_latency);
-#ifdef CONFIG_CPU_UNDERCLOCK
-store_one(scaling_min_freq, min);
-#else
-store_one(scaling_max_freq, 300000);
-#endif
-#ifdef CONFIG_CPU_OVERCLOCK
-store_one(scaling_max_freq, max);
-#else
-store_one(scaling_max_freq, 1190400);
-#endif
+show_one(scaling_min_freq, min);
+show_one(scaling_max_freq, max);
 show_one(scaling_cur_freq, cur);
 show_one(cpu_utilization, util);
 
@@ -490,16 +482,8 @@ static ssize_t store_##file_name					\
 	return ret ? ret : count;					\
 }
 
-#ifdef CONFIG_CPU_UNDERCLOCK
 store_one(scaling_min_freq, min);
-#else
-store_one(scaling_max_freq, 300000);
-#endif
-#ifdef CONFIG_CPU_OVERCLOCK
 store_one(scaling_max_freq, max);
-#else
-store_one(scaling_max_freq, 1190400);
-#endif
 
 /**
  * show_cpuinfo_cur_freq - current CPU frequency as detected by hardware
