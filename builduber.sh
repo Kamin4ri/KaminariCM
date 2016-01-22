@@ -31,6 +31,9 @@ elif [ $device = "peregrine" ]; then
 elif [ $device = "titan" ]; then
 	echo -e "Device: Moto G 2nd Gen (titan)";
 	device2="Titan";
+elif [ $device = "thea" ]; then
+	echo -e "Device: Moto G 2nd Gen with LTE (thea)";
+	device2="Thea";
 else
 	echo -e "Invalid device. Aborting.";
 	exit 1;
@@ -133,10 +136,19 @@ fi;
 # Make the release dir if it doesn't exist
 if [ ! -d ../$outdir ]; then mkdir ../$outdir; fi;
 
-# Copy zImage-dtb
-cp -f arch/arm/boot/zImage-dtb ../$zipdir/;
-ls -l ../$zipdir/zImage-dtb;
+# Copy zImage
+cp -f arch/arm/boot/zImage ../$zipdir/;
+ls -l ../$zipdir/zImage;
 cd ../$zipdir;
+
+# Create dtb file from device tree blobs
+if [ "$device" = "falcon" ]; then
+	cat arch/arm/boot/msm8226-bigfoot-p1.dtb arch/arm/boot/msm8226-falcon-p1.dtb arch/arm/boot/msm8226-falcon-p2.dtb arch/arm/boot/msm8226-falcon-p2-v2.dtb arch/arm/boot/msm8226-falcon-p2b.dtb arch/arm/boot/msm8226-falcon-p2b1.dtb arch/arm/boot/msm8226-falcon-p3c.dtb > ../$zipdir/dtb;
+elif [ "$device" = "peregrine" ]; then
+	cat arch/arm/boot/msm8926-peregrine-p1.dtb arch/arm/boot/msm8926-peregrine-p1c.dtb arch/arm/boot/msm8926-peregrine-p2.dtb arch/arm/boot/msm8926-peregrine-p2a1.dtb arch/arm/boot/msm8926-peregrine-p2d.dtb > ../$zipdir/dtb;
+elif [ "$device" = "titan" -o "$device" = "thea" ]; then
+	cat arch/arm/boot/msm8226-titan-4b.dtb arch/arm/boot/msm8226-titan-4c.dtb arch/arm/boot/msm8226-titan-4d.dtb arch/arm/boot/msm8226-titan-4e.dtb arch/arm/boot/msm8226-titan-4f.dtb arch/arm/boot/msm8926-thea-p1a.dtb arch/arm/boot/msm8926-thea-p1c.dtb arch/arm/boot/msm8926-thea-p2.dtb arch/arm/boot/msm8926-thea-p3.dtb > ../$zipdir/dtb;
+fi;
 
 # Set zip name
 case $version in
