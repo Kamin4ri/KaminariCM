@@ -7,8 +7,6 @@
 # - Kaminari tweaks start here
 # ---------------------------------------
 
-CONFIG_CPU_OVERCLOCK=y
-CONFIG_CPU_UNDERCLOCK=y
 CONFIG_FORCE_FAST_CHARGE=y
 CONFIG_HPH_HIGH_PERF=y
 CONFIG_SOUND_CONTROL_HAX_3_GPL=y
