@@ -446,7 +446,11 @@ static ssize_t show_##file_name				\
 show_one(cpuinfo_min_freq, cpuinfo.min_freq);
 show_one(cpuinfo_max_freq, cpuinfo.max_freq);
 show_one(cpuinfo_transition_latency, cpuinfo.transition_latency);
-show_one(scaling_min_freq, min);
+#ifdef CONFIG_CPU_UNDERCLOCK
+store_one(scaling_min_freq, min);
+#else
+store_one(scaling_max_freq, 300000);
+#endif
 #ifdef CONFIG_CPU_OVERCLOCK
 store_one(scaling_max_freq, max);
 #else
@@ -486,7 +490,11 @@ static ssize_t store_##file_name					\
 	return ret ? ret : count;					\
 }
 
+#ifdef CONFIG_CPU_UNDERCLOCK
 store_one(scaling_min_freq, min);
+#else
+store_one(scaling_max_freq, 300000);
+#endif
 #ifdef CONFIG_CPU_OVERCLOCK
 store_one(scaling_max_freq, max);
 #else
