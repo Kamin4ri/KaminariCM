@@ -1913,21 +1913,6 @@ config MSM_DEVFREQ_CPUBW
 	  agnostic interface to so that some of the devfreq governors can be
 	  shared across SoCs.
 
-config CPU_UNDERCLOCK
-	bool "Enable CPU underclocking"
-	default n
-	help
-	 Enable CPU underclock up to 96 MHz. Some CPU governors
-	 might not work properly if this option is enabled.
-	 
-config CPU_OVERCLOCK
-	bool "Enable CPU overclocking"
-	depends on CONFIG_ARCH_MSM8226
-	default n
-	help
-	  Enable CPU overclocking up to 1.6 GHz. Some CPU governors might
-	  not work properly if this is enabled.
-
 config MSM_AVS_HW
 	bool "Enable Adaptive Voltage Scaling (AVS)"
 	default n
