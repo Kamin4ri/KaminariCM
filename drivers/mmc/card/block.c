@@ -3387,7 +3387,7 @@ static const struct mmc_fixup blk_fixups[] =
 	 * instead of CMD12-bounded multiblock transfers. For now we'll
 	 * black list what's bad...
 	 * - Certain Toshiba cards.
-	 * - Samsung's M8G1GC eMMC chip.
+	 *
 	 * N.B. This doesn't affect SD cards.
 	 */
 	MMC_FIXUP("MMC08G", CID_MANFID_TOSHIBA, CID_OEMID_ANY, add_quirk_mmc,
@@ -3395,8 +3395,6 @@ static const struct mmc_fixup blk_fixups[] =
 	MMC_FIXUP("MMC16G", CID_MANFID_TOSHIBA, CID_OEMID_ANY, add_quirk_mmc,
 		  MMC_QUIRK_BLK_NO_CMD23),
 	MMC_FIXUP("MMC32G", CID_MANFID_TOSHIBA, CID_OEMID_ANY, add_quirk_mmc,
-		  MMC_QUIRK_BLK_NO_CMD23),
-	MMC_FIXUP("M8G1GC", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
 		  MMC_QUIRK_BLK_NO_CMD23),
 
 	/*
@@ -3435,6 +3433,8 @@ static const struct mmc_fixup blk_fixups[] =
 		  MMC_QUIRK_CACHE_DISABLE),
 	MMC_FIXUP(CID_NAME_ANY, CID_MANFID_HYNIX, CID_OEMID_ANY, add_quirk_mmc,
 		  MMC_QUIRK_RETRY_FLUSH_TIMEOUT),
+	MMC_FIXUP("M8G1GC", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
+		  MMC_QUIRK_CACHE_DISABLE),
 	END_FIXUP
 };
 
