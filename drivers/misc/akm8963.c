@@ -1221,7 +1221,7 @@ static void akm8963_suspend (void) {
 	wake_up(&s_akm->open_wq);
 }
 
-static int akm8963_resume (void) {
+static void akm8963_resume (void) {
 	dev_info(&s_akm->i2c->dev, "%s: Resume\n", __func__);
 
 	mutex_lock(&s_akm->state_mutex);
@@ -1446,7 +1446,7 @@ int akm8963_probe(struct i2c_client* client, struct i2c_device_id const* id) {
 				s_akm->irq,
 				NULL,
 				akm8963_irq,
-				IRQF_TRIGGER_RISING,
+				IRQF_TRIGGER_RISING | IRQF_NO_SUSPEND,
 				dev_name(&client->dev),
 				s_akm);
 		if (err < 0) {
@@ -1546,7 +1546,7 @@ MODULE_DEVICE_TABLE(of, akm8963_match_tbl);
 #endif
 
 
-static struct const i2c_device_id akm8963_id[] = {
+static const struct i2c_device_id akm8963_id[] = {
 	{AKM8963_I2C_NAME, 0 },
 	{ }
 };

@@ -800,31 +800,17 @@ static void lis3dh_input_cleanup(struct lis3dh_data *lis)
 
 #ifdef CONFIG_STATE_NOTIFIER
 static void lis3dh_resume (void) {
-	int err;
-
-	if (lis3dh_misc_data->on_before_suspend) {
-		err = lis3dh_enable(lis3dh_misc_data);
-		if (err < 0)
-			dev_err(&lis3dh_misc_data->client->dev,
-				"resume failure\n");
-	}
+	if (lis3dh_misc_data->on_before_suspend)
+		lis3dh_enable(lis3dh_misc_data);
 }
 
 static void lis3dh_suspend (void) {
-	int err;
-
-	lis3dh_misc_data>on_before_suspend =
+	lis3dh_misc_data->on_before_suspend =
 		atomic_read(&lis3dh_misc_data->enabled);
-	if (lis3dh_misc_data->on_before_suspend) {
-		err = lis3dh_disable(lis3dh_misc_data);
-		if (err < 0)
-			dev_err(&lis3dh_misc_data->client->dev, "suspend failure\n");
-	}
+	lis3dh_disable(lis3dh_misc_data);
 }
 
 static int state_notifier_callback (struct notifier_block* this, unsigned long event, void* data) {
-	mutex_lock(&lis3dh_misc_data->lock);
-
 	switch (event) {
 	case STATE_NOTIFIER_ACTIVE:
 		lis3dh_resume();
@@ -835,8 +821,6 @@ static int state_notifier_callback (struct notifier_block* this, unsigned long e
 	default:
 		break;
 	}
-
-	mutex_unlock(&lis3dh_misc_data->lock);
 
 	return NOTIFY_OK;
 }
@@ -949,6 +933,9 @@ static int lis3dh_probe(struct i2c_client *client,
 		err = -ENODEV;
 		goto err0;
 	}
+
+	/** Wait for at least 100us before starting I2C talking **/
+	usleep_range(100, 100);
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 		dev_err(&client->dev, "client not i2c capable\n");
