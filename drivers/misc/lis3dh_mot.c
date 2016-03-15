@@ -27,11 +27,16 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_gpio.h>
-#include <linux/suspend.h>
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/lis3dh_mot.h>
 #include <linux/regulator/consumer.h>
+
+#ifdef CONFIG_STATE_NOTIFIER
+#include <linux/state_notifier.h>
+#else
+#include <linux/suspend.h>
+#endif
 
 #define NAME				"lis3dh"
 
@@ -153,14 +158,18 @@ struct lis3dh_data {
 	u8 resume_state[5];
 	u8 irq_config[3];
 
+#ifdef CONFIG_STATE_NOTIFIER
+  	struct notifier_block notif;
+#else
 	struct notifier_block pm_notifier;
+#endif
 };
 
 /*
  * Because misc devices can not carry a pointer from driver register to
  * open, we keep this global.  This limits the driver to a single instance.
  */
-struct lis3dh_data *lis3dh_misc_data;
+struct lis3dh_data* lis3dh_misc_data;
 
 static int lis3dh_i2c_read(struct lis3dh_data *lis, u8 * buf, int len)
 {
@@ -789,6 +798,49 @@ static void lis3dh_input_cleanup(struct lis3dh_data *lis)
 	input_free_device(lis->input_dev);
 }
 
+#ifdef CONFIG_STATE_NOTIFIER
+static void lis3dh_resume (void) {
+	int err;
+
+	if (lis3dh_misc_data->on_before_suspend) {
+		err = lis3dh_enable(lis3dh_misc_data);
+		if (err < 0)
+			dev_err(&lis3dh_misc_data->client->dev,
+				"resume failure\n");
+	}
+}
+
+static void lis3dh_suspend (void) {
+	int err;
+
+	lis3dh_misc_data>on_before_suspend =
+		atomic_read(&lis3dh_misc_data->enabled);
+	if (lis3dh_misc_data->on_before_suspend) {
+		err = lis3dh_disable(lis3dh_misc_data);
+		if (err < 0)
+			dev_err(&lis3dh_misc_data->client->dev, "suspend failure\n");
+	}
+}
+
+static int state_notifier_callback (struct notifier_block* this, unsigned long event, void* data) {
+	mutex_lock(&lis3dh_misc_data->lock);
+
+	switch (event) {
+	case STATE_NOTIFIER_ACTIVE:
+		lis3dh_resume();
+		break;
+	case STATE_NOTIFIER_SUSPEND:
+		lis3dh_suspend();
+		break;
+	default:
+		break;
+	}
+
+	mutex_unlock(&lis3dh_misc_data->lock);
+
+	return NOTIFY_OK;
+}
+#else
 static int lis3dh_resume(struct lis3dh_data *lis)
 {
 	int err;
@@ -838,6 +890,7 @@ static int lis3dh_pm_event(struct notifier_block *this,
 
 	return NOTIFY_DONE;
 }
+#endif
 
 #ifdef CONFIG_OF
 static struct lis3dh_platform_data *
@@ -1010,12 +1063,21 @@ static int lis3dh_probe(struct i2c_client *client,
 
 	lis3dh_device_power_off(lis);
 
+#ifdef CONFIG_STATE_NOTIFIER
+	lis3dh_misc_data->notif.notifier_call = state_notifier_callback;
+	err = state_register_client(&lis3dh_misc_data->notif);
+	if (err < 0) {
+		pr_err("%s:Failed to register state notifier client for: %d\n", __func__, err);
+		goto err5;
+	}
+#else
 	lis->pm_notifier.notifier_call = lis3dh_pm_event;
 	err = register_pm_notifier(&lis->pm_notifier);
 	if (err < 0) {
 		pr_err("%s:Register_pm_notifier failed: %d\n", __func__, err);
 		goto err5;
 	}
+#endif
 
 	/* As default, do not report information */
 	atomic_set(&lis->enabled, 0);
@@ -1055,7 +1117,11 @@ static int __devexit lis3dh_remove(struct i2c_client *client)
 		regulator_put(lis->vdd);
 	}
 
+#ifdef CONFIG_STATE_NOTIFIER
+	state_unregister_client(&lis3dh_misc_data->notif);
+#else
 	unregister_pm_notifier(&lis->pm_notifier);
+#endif
 	misc_deregister(&lis3dh_misc_device);
 	lis3dh_input_cleanup(lis);
 	lis3dh_device_power_off(lis);
