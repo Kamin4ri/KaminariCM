@@ -90,9 +90,9 @@ echo -e "Build started on: `date +"%A, %d %B %Y @ %H:%M:%S %Z (GMT %:z)"`";
 make falcon_defconfig;
 
 if [ $numjobs ] && [ $numjobs != 0 ]; then
-	make -j$numjobs;
+	make -j$numjobs CONFIG_NO_ERROR_ON_MISMATCH=y;
 else
-	make -j4;
+	make -j4 CONFIG_NO_ERROR_ON_MISMATCH=y;
 fi;
 
 # Tell when the build was finished
