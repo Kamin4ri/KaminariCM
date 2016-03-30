@@ -27,7 +27,7 @@
 #define QPNP_VIB_EN_CTL(base)		(base + 0x46)
 
 #define QPNP_VIB_MAX_LEVEL		31
-#define QPNP_VIB_MIN_LEVEL		10
+#define QPNP_VIB_MIN_LEVEL		0
 
 #define QPNP_VIB_DEFAULT_TIMEOUT	15000
 #define QPNP_VIB_DEFAULT_VTG_LVL	3100
@@ -60,20 +60,20 @@ struct qpnp_vib {
 static struct qpnp_vib *vib_dev;
 
 static ssize_t qpnp_vib_level_show(struct device *dev,
-                                        struct device_attribute *attr,
-                                        char *buf)
+				   struct device_attribute *attr,
+				   char *buf)
 {
-        struct timed_output_dev *tdev = dev_get_drvdata(dev);
-        struct qpnp_vib *vib = container_of(tdev, struct qpnp_vib,
-                                         timed_dev);
+	struct timed_output_dev *tdev = dev_get_drvdata(dev);
+	struct qpnp_vib *vib = container_of(tdev, struct qpnp_vib,
+					    timed_dev);
 
-        return scnprintf(buf, PAGE_SIZE, "%d\n", vib->vtg_level_normal);
+	return scnprintf(buf, PAGE_SIZE, "%d\n", vib->vtg_level_normal);
 }
 
 
 static ssize_t qpnp_vib_level_store(struct device *dev,
-                                        struct device_attribute *attr,
-                                        const char *buf, size_t count)
+				    struct device_attribute *attr,
+				    const char *buf, size_t count)
 {
         struct timed_output_dev *tdev = dev_get_drvdata(dev);
         struct qpnp_vib *vib = container_of(tdev, struct qpnp_vib,
@@ -97,7 +97,8 @@ static ssize_t qpnp_vib_level_store(struct device *dev,
         return strnlen(buf, count);
 }
 
-static DEVICE_ATTR(vtg_level, S_IRUGO | S_IWUSR, qpnp_vib_level_show, qpnp_vib_level_store);
+static DEVICE_ATTR(vtg_level, S_IRUGO | S_IWUSR,
+		   qpnp_vib_level_show, qpnp_vib_level_store);
 
 static int qpnp_vib_read_u8(struct qpnp_vib *vib, u8 *data, u16 reg)
 {
@@ -374,7 +375,7 @@ static int __devinit qpnp_vibrator_probe(struct spmi_device *spmi)
 	if (rc < 0)
 		return rc;
 
-        device_create_file(vib->timed_dev.dev, &dev_attr_vtg_level);
+	device_create_file(vib->timed_dev.dev, &dev_attr_vtg_level);
 
 	vib_dev = vib;
 
