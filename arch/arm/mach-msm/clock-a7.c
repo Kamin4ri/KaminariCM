@@ -210,10 +210,9 @@ static int of_get_fmax_vdd_class(struct platform_device *pdev, struct clk *c,
 	return 0;
 }
 
-static void get_speed_bin(struct platform_device *pdev, int *bin, int *version)
-{
-	struct resource *res;
-	void __iomem *base;
+static void get_speed_bin (struct platform_device* pdev, int* bin, int* version) {
+	struct resource* res;
+	void __iomem* base;
 	u32 pte_efuse, redundant_sel, valid;
 
 	*bin = 0;
@@ -244,10 +243,13 @@ static void get_speed_bin(struct platform_device *pdev, int *bin, int *version)
 	if (redundant_sel == 1)
 		*bin = (pte_efuse >> 27) & 0x7;
 
-	dev_info(&pdev->dev, "Speed bin being set to 1\n");
-	*bin = 1; // Force BIN 1
-  
-	dev_info(&pdev->dev, "Speed bin: %d\n", *bin);
+	if (!valid) {
+		dev_info(&pdev->dev, "Speed bin not set. Defaulting to 0!\n");
+		*bin = 0;
+	} else {
+		dev_info(&pdev->dev, "Speed bin: %d\n", *bin);
+	}
+ 
 	dev_info(&pdev->dev, "PVS version: %d\n", *version);
 
 	return;
