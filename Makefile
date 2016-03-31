@@ -250,7 +250,7 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = ccache gcc
 HOSTCXX      = ccache g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fno-tree-vectorize -fomit-frame-pointer -std=gnu99
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
 HOSTCXXFLAGS = -Ofast -fno-tree-vectorize
 
 # Decide whether to build built-in, modular, or both.
@@ -359,7 +359,7 @@ KERNEL_FLAGS	= -marm -mtune=cortex-a7 -mcpu=cortex-a7 -mfpu=neon-vfpv4 \
                   -mvectorize-with-neon-quad -fgcse-after-reload -fgcse-sm \
                   -fgcse-las -ftree-loop-im -ftree-loop-ivcanon -fivopts \
                   -ftree-vectorize -fmodulo-sched -ffast-math \
-                  -funsafe-math-optimizations -std=gnu99
+                  -funsafe-math-optimizations -std=gnu89
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 CFLAGS_MODULE   = -DMODULE -fno-pic $(KERNEL_FLAGS)
