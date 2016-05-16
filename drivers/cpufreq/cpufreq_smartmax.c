@@ -59,7 +59,7 @@
 static unsigned int suspend_ideal_freq;
 
 #define DEFAULT_AWAKE_IDEAL_FREQ GOV_IDLE_FREQ
-static unsigned int awake_ideal_freq;
+static unsigned int awake_ideal_freq = 1094400;
 
 /*
  * Freqeuncy delta when ramping up above the ideal freqeuncy.
@@ -111,7 +111,7 @@ static unsigned int sampling_rate;
 #define DEFAULT_INPUT_BOOST_DURATION 50000000
 static unsigned int input_boost_duration;
 
-static unsigned int touch_poke_freq = 787200;
+static unsigned int touch_poke_freq = 1344400;
 static bool touch_poke = true;
 
 /*
