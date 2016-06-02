@@ -250,8 +250,31 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = ccache gcc
 HOSTCXX      = ccache g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fno-tree-vectorize -fomit-frame-pointer -std=gnu99
+ifdef CONFIG_CC_DONT_OPTIMIZE
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -fno-tree-vectorize
+else ifdef CONFIG_CC_OPTIMIZE_FOR_DEBUGGING
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Og -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -Og -fno-tree-vectorize
+else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Os -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -Os -fno-tree-vectorize
+else ifdef CONFIG_CC_OPTIMIZATION_LEVEL_ZERO
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O0 -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -O0 -fno-tree-vectorize
+else ifdef CONFIG_CC_OPTIMIZATION_LEVEL_ONE
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O1 -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -O1 -fno-tree-vectorize
+else ifdef CONFIG_CC_OPTIMIZATION_LEVEL_TWO
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -O2 -fno-tree-vectorize
+else ifdef CONFIG_CC_OPTIMIZATION_LEVEL_THREE
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
 HOSTCXXFLAGS = -O3 -fno-tree-vectorize
+else ifdef CONFIG_CC_OPTIMIZATION_MAX
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fno-tree-vectorize -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -Ofast -fno-tree-vectorize
+endif
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -576,10 +599,22 @@ endif # $(dot-config)
 # Defaults to vmlinux, but the arch makefile usually adds further targets
 all: vmlinux
 
-ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
-else
+ifdef CONFIG_CC_DONT_OPTIMIZE
+KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized,) -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -Wno-unused-variable -fivopts -fno-inline-functions
+else ifdef CONFIG_CC_OPTIMIZE_FOR_DEBUGGING
+KBUILD_CFLAGS	+= -Og $(call cc-disable-warning,maybe-uninitialized,) -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -Wno-unused-variable -fivopts -fno-inline-functions
+else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,) -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -Wno-unused-variable -fivopts -fno-inline-functions
+else ifdef CONFIG_CC_OPTIMIZATION_LEVEL_ZERO
+KBUILD_CFLAGS	+= -O0 $(call cc-disable-warning,maybe-uninitialized,) -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -Wno-unused-variable -fivopts -fno-inline-functions
+else ifdef CONFIG_CC_OPTIMIZATION_LEVEL_ONE
+KBUILD_CFLAGS	+= -O1 $(call cc-disable-warning,maybe-uninitialized,) -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -Wno-unused-variable -fivopts -fno-inline-functions
+else ifdef CONFIG_CC_OPTIMIZATION_LEVEL_TWO
+KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,) -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -Wno-unused-variable -fivopts -fno-inline-functions
+else ifdef CONFIG_CC_OPTIMIZATION_LEVEL_THREE
 KBUILD_CFLAGS	+= -O3 $(call cc-disable-warning,maybe-uninitialized,) -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -Wno-unused-variable -fivopts -fno-inline-functions
+else ifdef CONFIG_CC_OPTIMIZATION_MAX
+KBUILD_CFLAGS	+= -Ofast $(call cc-disable-warning,maybe-uninitialized,) -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -Wno-unused-variable -fivopts -fno-inline-functions
 endif
 
 # conserve stack if available
