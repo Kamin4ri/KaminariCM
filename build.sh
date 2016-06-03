@@ -103,20 +103,20 @@ builddate=`date +%Y%m%d.%H%M%S`;
 builddate_full=`date +"%d %b %Y | %H:%M:%S %Z"`;
 
 # Make the zip dir if it doesn't exist
-if [ ! -d ../Zip_Cm12.1 ]; then 
-	mkdir ../Zip_Cm12.1;
+if [ ! -d ../Zip_Cm12.1_Overclock ]; then 
+	mkdir ../Zip_Cm12.1_Overclock;
 fi;
 
 # Copy zImage-dtb
-cp -f arch/arm/boot/zImage-dtb ../Zip_Cm12.1/;
-ls -l ../Zip_Cm12.1/zImage-dtb;
-cd ../Zip_Cm12.1;
+cp -f arch/arm/boot/zImage-dtb ../Zip_Cm12.1_Overclock/;
+ls -l ../Zip_Cm12.1_Overclock/zImage-dtb;
+cd ../Zip_Cm12.1_Overclock;
 
 # Set zip name
 if [ $version ] && [ "$version" != "" ]; then
-	zipname="KaminariCM12.1_R"$version"_Falcon";
+	zipname="KaminariCM12.1_R"$version"_Falcon_Overclock";
 else
-	zipname="KaminariCM12.1_"$builddate"_Falcon";
+	zipname="KaminariCM12.1_"$builddate"_Falcon_Overclock";
 fi;
 
 # Make the zip
@@ -127,4 +127,4 @@ else
 	echo -e "Build date and time: $builddate_full" > builddate.txt;
 fi;
 zip -r9 $zipname.zip * > /dev/null;
-mv $zipname.zip ../Out_Cm12.1;
+mv $zipname.zip ../Out_Cm12.1_Overclock;
