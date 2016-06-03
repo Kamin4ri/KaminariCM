@@ -3,15 +3,16 @@
 # Variables
 sequence=`seq 1 100`;
 numjobs=0;
-this="KaminariKernel";
+this="KaminariCM";
 
 # Set up the cross-compiler
+export PATH=$HOME/Toolchains/Linaro-5.3-Generic/bin:$PATH;
 export ARCH=arm;
 export SUBARCH=arm;
-export CROSS_COMPILE=$HOME/Toolchains/Linaro-5.2-A7/bin/arm-cortex_a7-linux-gnueabihf-;
+export CROSS_COMPILE=arm-linux-gnueabihf-;
 
 # Output some basic info
-echo -e "Building KaminariKernel...";
+echo -e "Building KaminariKernel (CM13 version)...";
 
 if [ $1 ]; then
 	case $1 in
@@ -38,8 +39,8 @@ if [ $1 ]; then
 			fi;
 			;;
 		*)
-			if [[ `echo $1 | gawk --re-interval "/v/"` != "" ]]; then
-				version=`echo $1 | cut -d"v" -f2`;
+			if [[ `echo $1 | gawk --re-interval "/r/"` != "" ]]; then
+				version=`echo $1 | cut -d"r" -f2`;
 				if [ $2 ]; then
 					case $2 in
 						"clean")
@@ -102,21 +103,20 @@ builddate=`date +%Y%m%d.%H%M%S`;
 builddate_full=`date +"%d %b %Y | %H:%M:%S %Z"`;
 
 # Make the zip dir if it doesn't exist
-if [ ! -d ../Zip_Cm12 ]; then 
-	mkdir ../Zip_Cm12;
-	cp -rf ../Custom_AnyKernel/* ../Zip_Cm12;
+if [ ! -d ../Zip_Cm12.1 ]; then 
+	mkdir ../Zip_Cm12.1;
 fi;
 
 # Copy zImage-dtb
-cp -f arch/arm/boot/zImage-dtb ../Zip_Cm12/;
-ls -l ../Zip_Cm12/zImage-dtb;
-cd ../Zip_Cm12;
+cp -f arch/arm/boot/zImage-dtb ../Zip_Cm12.1/;
+ls -l ../Zip_Cm12.1/zImage-dtb;
+cd ../Zip_Cm12.1;
 
 # Set zip name
 if [ $version ] && [ "$version" != "" ]; then
-	zipname="KaminariCM12_v"$version"_Falcon";
+	zipname="KaminariCM12.1_R"$version"_Falcon";
 else
-	zipname="KaminariCM12_"$builddate"_Falcon";
+	zipname="KaminariCM12.1_"$builddate"_Falcon";
 fi;
 
 # Make the zip
@@ -127,4 +127,4 @@ else
 	echo -e "Build date and time: $builddate_full" > builddate.txt;
 fi;
 zip -r9 $zipname.zip * > /dev/null;
-mv $zipname.zip ../Out_Cm12;
+mv $zipname.zip ../Out_Cm12.1;
