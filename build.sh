@@ -114,9 +114,9 @@ cd ../Zip_Cm13;
 
 # Set zip name
 if [ $version ] && [ "$version" != "" ]; then
-	zipname="Kaminari_R"$version"_Falcon";
+	zipname="KaminariCM13_R"$version"_Falcon";
 else
-	zipname="Kaminari_"$builddate"_Falcon";
+	zipname="KaminariCM13_"$builddate"_Falcon";
 fi;
 
 # Make the zip
