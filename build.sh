@@ -121,7 +121,7 @@ fi;
 
 # Make the zip
 if [ $version ] && [ "$version" != "" ]; then
-	echo -e "Version: $version" > version.txt && echo -e "Build date and time: $builddate_full" > builddate.txt;
+	echo -e "Release #$version" > version.txt && echo -e "Build date and time: $builddate_full" > builddate.txt;
 else
 	[ -e version.txt ] && rm version.txt;	
 	echo -e "Build date and time: $builddate_full" > builddate.txt;
