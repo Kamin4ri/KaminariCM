@@ -12,7 +12,7 @@ export SUBARCH=arm;
 export CROSS_COMPILE=arm-linux-gnueabihf-;
 
 # Output some basic info
-echo -e "Building KaminariKernel (CM13 version)...";
+echo -e "Building KaminariKernel (CM12.1 version)...";
 
 if [ $1 ]; then
 	case $1 in
