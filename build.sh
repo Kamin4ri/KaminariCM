@@ -107,6 +107,11 @@ if [ ! -d ../Zip_Cm13_Overclock ]; then
 	mkdir ../Zip_Cm13_Overclock;
 fi;
 
+# Out dir
+if [ ! -d ../Out_Cm13_Overclock ]; then 
+	mkdir ../Out_Cm13_Overclock;
+fi;
+
 # Copy zImage-dtb
 cp -f arch/arm/boot/zImage-dtb ../Zip_Cm13_Overclock/;
 ls -l ../Zip_Cm13_Overclock/zImage-dtb;
